@@ -6,7 +6,6 @@ package indirect
 
 import (
 	"piencodings/monsync"
-	"strconv"
 )
 
 const N = 3
@@ -30,7 +29,7 @@ func genStep[T any](i int, s string, f func([]chan T)) {
 		f([]chan T{}) // empty list of channels
 	} else {
 		monsync.Gen( // (ν ai)
-			s+strconv.Itoa(i),
+			s,
 			func(c chan T) {
 				genStep(i+1, s, func(cs []chan T) { // next step
 					// progressively build up the list of channels passed to f
