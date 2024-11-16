@@ -3,7 +3,7 @@
 Author: [Clément Chapot](mailto:contact@clementchapot.com)<br/>
 Description: Code submission for practical of the CS course "Distributed Processes, Types and Programming" at Oxford
 
-## Runnig
+## Running
 
 ```bash
 $ go run .
