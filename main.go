@@ -1,21 +1,24 @@
 package main
 
 import (
-	. "piencodings/chanprinter"
+	"fmt"
+	"piencodings/chanprinter"
 	"piencodings/monasync"
 	"piencodings/monsync"
 	"piencodings/polysync/direct"
 	"piencodings/polysync/indirect"
+	"piencodings/stats"
 	"time"
 )
 
 func init() {
-	ChanTbl.Tbl = make(map[any]any)
+	chanprinter.ChanTbl.Tbl = make(map[any]any)
 }
 
 func main() {
 
 	print("Monadic asynchronous π-process: (ν a)(ν b)(a<b>|a(x).0)\n")
+	stats.GlobalStats.Reset()
 	monasync.Gen(
 		"a",
 		func(a chan chan any) {
@@ -35,9 +38,12 @@ func main() {
 		},
 	)
 	time.Sleep(100 * time.Millisecond)
+	fmt.Print("\n")
+	stats.GlobalStats.PrintStats()
 
 	print("\nSimulation of monadic synchronous π-calculus using monadic asynchronous π-calculus\n")
 	print("π-process (ν a)(ν b)(a<b>.0|a(x).0)\n")
+	stats.GlobalStats.Reset()
 	monsync.Gen(
 		"a",
 		func(a chan chan chan chan any) {
@@ -57,10 +63,13 @@ func main() {
 		},
 	)
 	time.Sleep(100 * time.Millisecond)
+	fmt.Print("\n")
+	stats.GlobalStats.PrintStats()
 
 	print("\nSimulation of polyadic (N=3) synchronous π-calculus using monadic asynchronous π-calculus\n")
 	print("With the direct encoding\n")
 	print("π-process: (ν a)(ν b)(a<b>.0|a(x).0)\n")
+	stats.GlobalStats.Reset()
 	direct.GenChan(
 		"a",
 		func(a chan chan chan chan any) {
@@ -80,10 +89,13 @@ func main() {
 		},
 	)
 	time.Sleep(100 * time.Millisecond)
+	fmt.Print("\n")
+	stats.GlobalStats.PrintStats()
 
 	print("\nSimulation of polyadic (N=3) synchronous π-calculus using monadic asynchronous π-calculus\n")
 	print("With the indirect encoding\n")
 	print("π-process: (ν a)(ν b)(a<b>.0|a(x).0)\n")
+	stats.GlobalStats.Reset()
 	indirect.GenChan(
 		"a",
 		func(a chan chan chan chan chan chan chan any) {
@@ -103,5 +115,7 @@ func main() {
 		},
 	)
 	time.Sleep(100 * time.Millisecond)
+	fmt.Print("\n")
+	stats.GlobalStats.PrintStats()
 
 }

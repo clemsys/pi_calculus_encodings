@@ -9,14 +9,7 @@ import (
 	"math/rand"
 	"strconv"
 	"sync"
-	"time"
 )
-
-func init() {
-
-	rand.Seed(time.Now().UnixNano())
-
-}
 
 // Map from channels to printable format
 var ChanTbl struct {

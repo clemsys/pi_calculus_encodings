@@ -5,11 +5,12 @@ package monasync
 
 import (
 	. "piencodings/chanprinter"
+	"piencodings/stats"
 )
 
 // 0
 func Nil() {
-	Print("  0\n")
+	Print("  0")
 }
 
 // P|Q
@@ -24,20 +25,22 @@ func Par(f func(), g func()) {
 func Gen[T any](s string, f func(chan T)) {
 	a := make(chan T) // (ν a)
 	SetC(a, GenNameS(s))
-	Print("  (ν %s)\n", a)
+	Print("  (ν %s)", a)
 
 	f(a)
 }
 
 // u<v>
 func Send[T any](u chan T, v T) {
-	Print("  %s<%s>\n", u, v)
+	Print("  %s<%s>", u, v)
 	u <- v
+	stats.GlobalStats.LogSend() // instrumentation
 }
 
 // u(x).P
 func Recv[T any](u chan T, f func(T)) {
 	x := <-u
-	Print("  %s(%s)\n", u, x)
+	stats.GlobalStats.LogRecv() // instrumentation
+	Print("  %s(%s)", u, x)
 	f(x)
 }

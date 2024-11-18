@@ -8,6 +8,11 @@ import (
 	"piencodings/monsync"
 )
 
+type stats struct {
+	sent     int
+	received int
+}
+
 const N = 3
 
 // 0
