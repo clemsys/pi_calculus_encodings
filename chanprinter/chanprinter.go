@@ -1,5 +1,4 @@
-// Filename: chanPrinter.go
-// Usage: $ go run chanPrinter.go dptpFileName.go
+// Filename: chanprinter.go
 // GPLv3 2024, MobilityReadingGroup, University of Oxford
 
 package chanprinter
@@ -15,6 +14,10 @@ import (
 var ChanTbl struct {
 	mu  sync.Mutex
 	Tbl map[any]any
+}
+
+func ChanTblReset() {
+	ChanTbl.Tbl = make(map[any]any)
 }
 
 // Get elem associated to channel

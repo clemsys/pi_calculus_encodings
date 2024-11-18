@@ -1,3 +1,7 @@
+// Filename: main.go
+// Usage: go run .
+// Description: Usage examples of the different encodings
+
 package main
 
 import (
@@ -11,13 +15,10 @@ import (
 	"time"
 )
 
-func init() {
-	chanprinter.ChanTbl.Tbl = make(map[any]any)
-}
-
 func main() {
 
-	print("Monadic asynchronous π-process: (ν a)(ν b)(a<b>|a(x).0)\n")
+	print("[Monadic asynchronous]\n  π-process: (ν a)(ν b)(a<b>|a(x).0)\n  Calls:")
+	chanprinter.ChanTblReset()
 	stats.GlobalStats.Reset()
 	monasync.Gen(
 		"a",
@@ -41,8 +42,50 @@ func main() {
 	fmt.Print("\n")
 	stats.GlobalStats.PrintStats()
 
-	print("\nSimulation of monadic synchronous π-calculus using monadic asynchronous π-calculus\n")
-	print("π-process (ν a)(ν b)(a<b>.0|a(x).0)\n")
+	print("\n\n[Monadic asynchronous]\n  π-process: (ν a)(ν b)(ν c)(a<b>|b<c>|a(x).x(y).0)\n  Calls:")
+	chanprinter.ChanTblReset()
+	stats.GlobalStats.Reset()
+	monasync.Gen(
+		"a",
+		func(a chan chan chan any) {
+			monasync.Gen(
+				"b",
+				func(b chan chan any) {
+					monasync.Gen(
+						"c",
+						func(c chan any) {
+							monasync.Par(
+								func() {
+									monasync.Send(a, b)
+								},
+								func() {
+									monasync.Par(
+										func() {
+											monasync.Send(b, c)
+										},
+										func() {
+											monasync.Recv(a, func(x chan chan any) {
+												monasync.Recv(x, func(y chan any) {
+													monasync.Nil()
+												})
+											})
+										},
+									)
+								},
+							)
+						},
+					)
+				},
+			)
+		},
+	)
+	time.Sleep(100 * time.Millisecond)
+	fmt.Print("\n")
+	stats.GlobalStats.PrintStats()
+
+	print("\n\n[Monadic synchronous]\n  simulated using monadic asynchronous π-calculus\n")
+	print("  π-process (ν a)(ν b)(a<b>.0|a(x).0)\n  Calls:")
+	chanprinter.ChanTblReset()
 	stats.GlobalStats.Reset()
 	monsync.Gen(
 		"a",
@@ -66,9 +109,9 @@ func main() {
 	fmt.Print("\n")
 	stats.GlobalStats.PrintStats()
 
-	print("\nSimulation of polyadic (N=3) synchronous π-calculus using monadic asynchronous π-calculus\n")
-	print("With the direct encoding\n")
-	print("π-process: (ν a)(ν b)(a<b>.0|a(x).0)\n")
+	print("\n\n[Polyadic (N=3) synchronous][Direct]\n  simulated using monadic asynchronous π-calculus\n")
+	print("  π-process: (ν a)(ν b)(a<b>.0|a(x).0)\n  Calls:")
+	chanprinter.ChanTblReset()
 	stats.GlobalStats.Reset()
 	direct.GenChan(
 		"a",
@@ -92,9 +135,9 @@ func main() {
 	fmt.Print("\n")
 	stats.GlobalStats.PrintStats()
 
-	print("\nSimulation of polyadic (N=3) synchronous π-calculus using monadic asynchronous π-calculus\n")
-	print("With the indirect encoding\n")
-	print("π-process: (ν a)(ν b)(a<b>.0|a(x).0)\n")
+	print("\n\n[Polyadic (N=3) synchronous][Indirect]\n  simulated using monadic asynchronous π-calculus\n")
+	print("  π-process: (ν a)(ν b)(a<b>.0|a(x).0)\n  Calls:")
+	chanprinter.ChanTblReset()
 	stats.GlobalStats.Reset()
 	indirect.GenChan(
 		"a",

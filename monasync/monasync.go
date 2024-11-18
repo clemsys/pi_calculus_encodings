@@ -25,6 +25,7 @@ func Par(f func(), g func()) {
 func Gen[T any](s string, f func(chan T)) {
 	a := make(chan T) // (ν a)
 	SetC(a, GenNameS(s))
+	stats.GlobalStats.LogChannel()
 	Print("  (ν %s)", a)
 
 	f(a)
