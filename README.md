@@ -9,7 +9,7 @@ Description: Code submission for practical of the CS course "Distributed Process
 $ go run .
 ```
 
-## Project structure
+## Project structure and remarks
 
 For all encodings, terms are represented using Go functions.
 
@@ -21,19 +21,24 @@ For all encodings, terms are represented using Go functions.
 ├── monasync/monasync.go        # simulation of monadic async π-calculus using Go channels
 ├── monsync/monsync.go          # simulation of monadic sync π-calculus using monadic async π-calculus
 └── polysync                    # simulation of polyadic sync π-calculus...
-    ├── direct/direct.go          # directly using monadic async π-calculus
-    └── indirect/indirect.go      # indirectly using sync π-calculus
+    ├── direct/direct.go            # directly using monadic async π-calculus
+    ├── indirect/indirect.go        # indirectly using sync π-calculus
+    └── polyadicity/polyadicity.go  # set the number of parameters for polyadic π-calculus
 ```
 
 There are two different paths to simulate asynchronous π-calculus:
-1. Direct encoding to monadic asynchronous π-calculus, using `monasync.go`
-2. Indirect encoding to monadic synchronous π-calculus using `monsync.go`, which itself uses `monasync.go`
+1. **Direct encoding** to monadic asynchronous π-calculus, using `monasync.go`
+2. **Indirect encoding** to monadic synchronous π-calculus using `monsync.go`, which itself uses `monasync.go`
 
-An effort has been made to only use functions from `monasync.go` in both `monsync.go` and `direct.go`, 
+An effort has been made to **only use functions from `monasync.go`** in both `monsync.go` and `direct.go`, 
 and to only use functions from `monsync.go` in `indirect.go`.
 
-The style of the code is also mostly functionnal, to show clearly that the successive encodings
+The style of the code is also **mostly functionnal**, to show clearly that the successive encodings
 are obtained from the previous ones without using any additionnal features from Go.
+
+The code uses **polymorphism** to make it possible to construct arbitrary terms.
+
+The **number of parameters** used in polyadic π-calculus can be adjusted using the function `polyadicity.SetN`.
 
 ## Why the direct encoding requires less messages and channels than the direct encoding
 

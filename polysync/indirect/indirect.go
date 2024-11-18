@@ -6,14 +6,13 @@ package indirect
 
 import (
 	"piencodings/monsync"
+	. "piencodings/polysync/polyadicity"
 )
 
 type stats struct {
 	sent     int
 	received int
 }
-
-const N = 3
 
 // 0
 func Nil() {

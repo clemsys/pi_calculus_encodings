@@ -11,6 +11,7 @@ import (
 	"piencodings/monsync"
 	"piencodings/polysync/direct"
 	"piencodings/polysync/indirect"
+	"piencodings/polysync/polyadicity"
 	"piencodings/stats"
 	"time"
 )
@@ -108,6 +109,46 @@ func main() {
 	time.Sleep(100 * time.Millisecond)
 	fmt.Print("\n")
 	stats.GlobalStats.PrintStats()
+
+	print("\n\n[Monadic synchronous]\n  simulated using monadic asynchronous π-calculus\n")
+	print("  π-process (ν a)(ν b)(ν c)(a<b>.b(x).0|a(x).x<c>.0)\n  Calls:")
+	chanprinter.ChanTblReset()
+	stats.GlobalStats.Reset()
+	monsync.Gen(
+		"a",
+		func(a chan chan chan chan chan chan chan any) {
+			monsync.Gen(
+				"b",
+				func(b chan chan chan chan any) {
+					monsync.Gen(
+						"c",
+						func(c chan any) {
+							monsync.Par(
+								func() {
+									monsync.Send(a, b, func() {
+										monsync.Recv(b, func(y chan any) {
+											monsync.Nil()
+										})
+									})
+								},
+								func() {
+									monsync.Recv(a, func(x chan chan chan chan any) {
+										monsync.Send(x, c, monsync.Nil)
+									})
+								},
+							)
+						},
+					)
+				},
+			)
+		},
+	)
+	time.Sleep(100 * time.Millisecond)
+	fmt.Print("\n")
+	stats.GlobalStats.PrintStats()
+
+	// set the number of parameters for polyadic π-calculus
+	polyadicity.SetN(3)
 
 	print("\n\n[Polyadic (N=3) synchronous][Direct]\n  simulated using monadic asynchronous π-calculus\n")
 	print("  π-process: (ν a)(ν b)(a<b>.0|a(x).0)\n  Calls:")

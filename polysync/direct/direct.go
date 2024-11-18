@@ -6,9 +6,8 @@ package direct
 
 import (
 	"piencodings/monasync"
+	. "piencodings/polysync/polyadicity"
 )
-
-const N = 3
 
 // 0
 func Nil() {
